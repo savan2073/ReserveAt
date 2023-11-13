@@ -32,8 +32,8 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             User existingUser = user.get();
-            existingUser.setName(userDetails.getName());
-            existingUser.setEmail(userDetails.getEmail());
+//            existingUser.setName(userDetails.getName());
+//            existingUser.setEmail(userDetails.getEmail());
             return userRepository.save(existingUser);
         }
         return null;

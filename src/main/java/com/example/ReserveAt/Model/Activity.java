@@ -15,9 +15,10 @@ import java.time.Duration;
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "activityID", nullable = false)
     private int id;
 
-    @Column(name = "activityName")
+    @Column(name = "activityName", nullable = false, length = 30)
     private String activityName;
 
     @Column(name = "description")
@@ -26,7 +27,12 @@ public class Activity {
     @Column(name = "price")
     private double price;
 
+    @Column(name = "durationOfTreatment")
     private Duration durationOfTreatment;
+
+    @ManyToOne
+    @JoinColumn(name = "employeeID", nullable = false)
+    private Employee employee;
 
     public Activity(String activityName, String description, double price, Duration durationOfTreatment) {
         this.activityName = activityName;
