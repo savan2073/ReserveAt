@@ -16,11 +16,11 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "messageID")
-    private int messageId;
+    private Long messageId;
     @Column(name = "senderID")
-    private int senderId;
+    private Long senderId;
     @Column(name = "receiverID")
-    private int receiverId;
+    private Long receiverId;
     @Column(name = "messageContent")
     private String messageContent;
     @Column(name = "sendDate")

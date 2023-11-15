@@ -16,13 +16,13 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookingID")
-    private int bookingId;
+    private Long bookingId;
     @Column(name = "userID")
-    private int userId;
+    private Long userId;
     @Column(name = "activityID")
-    private int activityId;
+    private Long activityId;
     @Column(name = "providerID")
-    private int providerId;
+    private Long providerId;
     @Column(name = "bookingDate")
     private Date bookingDate;
     //booking time

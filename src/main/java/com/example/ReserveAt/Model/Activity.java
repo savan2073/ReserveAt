@@ -16,7 +16,7 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "activityID", nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "activityName", nullable = false, length = 30)
     private String activityName;
@@ -34,11 +34,6 @@ public class Activity {
     @JoinColumn(name = "employeeID", nullable = false)
     private Employee employee;
 
-    public Activity(String activityName, String description, double price, Duration durationOfTreatment) {
-        this.activityName = activityName;
-        this.description = description;
-        this.price = price;
-        this.durationOfTreatment = durationOfTreatment;
-    }
+
 
 }

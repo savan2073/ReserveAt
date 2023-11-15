@@ -16,11 +16,11 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reviewId")
-    private int reviewId;
+    private Long reviewId;
     @Column(name = "userID")
-    private int userId;
+    private Long userId;
     @Column(name = "providerID")
-    private int providerId;
+    private Long providerId;
     @Column(name = "rating")
     private double rating;
     @Column(name = "contentOfReview")
