@@ -35,5 +35,4 @@ public class Activity {
     private Employee employee;
 
 
-
 }

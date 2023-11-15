@@ -9,22 +9,22 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "serviceprovider")
+@Table(name = "company")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceProvider {
+public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "providerId")
-    private Long providerId;
-    @Column(name = "providerName")
-    private String providerName;
+    @Column(name = "companyId")
+    private Long companyId;
+    @Column(name = "companyName",nullable = false)
+    private String companyName;
     @Column(name = "address")
     private String address;
     @Column(name = "rating")
     private double rating;
     @Column(name = "description")
     private String description;
-    @OneToMany(mappedBy = "serviceProvider")
+    @OneToMany(mappedBy = "company")
     private List<Employee> employees;
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "employeeID")
+    @Column(name = "employeeId")
     private Long employeeId;
     @Column(name = "employeeName")
     private String name;
@@ -26,6 +26,6 @@ public class Employee {
     private List<Activity> activities;
 
     @ManyToOne
-    @JoinColumn(name = "providerID")
-    private ServiceProvider serviceProvider;
+    @JoinColumn(name = "companyId")
+    private Company company;
 }
