@@ -27,4 +27,7 @@ public class Company {
     private String description;
     @OneToMany(mappedBy = "company")
     private List<Employee> employees;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "businessType")
+    private BusinessType businessType;
 }

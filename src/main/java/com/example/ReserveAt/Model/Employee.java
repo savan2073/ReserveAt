@@ -19,9 +19,9 @@ public class Employee {
     @Column(name = "employeeId")
     private Long employeeId;
     @Column(name = "employeeName")
-    private String name;
+    private String employeeName;
     @Column(name = "employeeSurname")
-    private String surname;
+    private String employeeSurname;
     @OneToMany(mappedBy = "employee")
     private List<Activity> activities;
 

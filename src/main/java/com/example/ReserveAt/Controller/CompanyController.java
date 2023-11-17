@@ -1,6 +1,7 @@
 package com.example.ReserveAt.Controller;
 
 import com.example.ReserveAt.Model.Company;
+import com.example.ReserveAt.Model.Employee;
 import com.example.ReserveAt.Service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,11 @@ public class CompanyController {
     public ResponseEntity<Void> deleteCompany(@PathVariable int id) {
         companyService.delete(id);
         return ResponseEntity.ok().build();
+    }
+    //get all employees from specific company
+    @GetMapping("/{id}/employees")
+    public ResponseEntity<List<Employee>> getEmployeesByCompany(@PathVariable int id) {
+        List<Employee> employees = companyService.getAllEmployeesByCompanyId(id);
+        return ResponseEntity.ok(employees);
     }
 }
