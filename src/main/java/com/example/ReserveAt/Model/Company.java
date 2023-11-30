@@ -19,6 +19,9 @@ public class Company {
     private Long companyId;
     @Column(name = "companyName",nullable = false)
     private String companyName;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "city")
+    private City city;
     @Column(name = "address")
     private String address;
     @Column(name = "rating")
