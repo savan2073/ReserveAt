@@ -19,12 +19,21 @@ public class Review {
     private Long reviewId;
     @Column(name = "userID")
     private Long userId;
-    @Column(name = "providerID")
-    private Long providerId;
     @Column(name = "rating")
     private double rating;
     @Column(name = "contentOfReview")
     private String content;
     @Column(name = "reviewDate")
     private Date reviewDate;
+    @ManyToOne
+    @JoinColumn(name = "companyId")
+    private Company company;
+
+    public void setRating(double rating) {
+        if (rating >= 1 && rating <= 5 && ((rating * 2) % 1 == 0)) {
+            this.rating = rating;
+        } else {
+            throw new IllegalArgumentException("Rating must be between 1 and 5 with steps of 0.5");
+        }
+    }
 }

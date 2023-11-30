@@ -30,4 +30,13 @@ public class Company {
     @Enumerated(EnumType.STRING)
     @Column(name = "businessType")
     private BusinessType businessType;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "password")
+    private String password;
+    @OneToMany(mappedBy = "company")
+    private List<Review> reviews;
+    @Column(name = "photoPath")
+    private String photoPath;
+
 }
