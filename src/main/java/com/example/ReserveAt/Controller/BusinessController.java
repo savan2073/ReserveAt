@@ -6,6 +6,8 @@ import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
 import com.example.ReserveAt.Response.LoginMessage;
 import com.example.ReserveAt.Service.BusinessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.nio.file.StandardCopyOption;
 @RequestMapping("/api/business")
 public class BusinessController {
 
+    private static final Logger logger = LoggerFactory.getLogger(BusinessController.class);
     @Autowired
     private BusinessService businessService;
 
@@ -36,11 +39,12 @@ public class BusinessController {
             @RequestParam("password") String password,
             @RequestParam("photo") MultipartFile photo) {
 
+        logger.info("Business register called");
         String photoPath = saveFileOnServer(photo);
         CompanyDTO companyDTO = new CompanyDTO(null, companyName, city, address, 0.0, description, null, businessType, email, password, null, photoPath);
 
         String id = businessService.addBiz(companyDTO);
-
+        logger.info("Business registered successfully" + companyDTO);
         return ResponseEntity.ok(id);
     }
 
