@@ -1,11 +1,13 @@
 package com.example.ReserveAt.Service.Implementation;
 
-import com.example.ReserveAt.Dto.CompanyDTO;
+import com.example.ReserveAt.Dto.BusinessDTO;
 import com.example.ReserveAt.Dto.LoginDTO;
-import com.example.ReserveAt.Model.Company;
-import com.example.ReserveAt.Repository.CompanyRepository;
+import com.example.ReserveAt.Model.Business;
+import com.example.ReserveAt.Repository.BusinessRepository;
+import com.example.ReserveAt.Repository.ReviewRepository;
 import com.example.ReserveAt.Response.LoginMessage;
 import com.example.ReserveAt.Service.BusinessService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,40 +18,42 @@ import java.util.Optional;
 public class BusinessImplementation implements BusinessService {
 
     @Autowired
-    private CompanyRepository companyRepository;
+    private BusinessRepository businessRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
-    public String addBiz(CompanyDTO companyDTO) {
-        Company company = new Company(
-                companyDTO.getCompanyId(),
-                companyDTO.getCompanyName(),
-                companyDTO.getCity(),
-                companyDTO.getAddress(),
-                companyDTO.getRating(),
-                companyDTO.getDescription(),
-                companyDTO.getEmployees(),
-                companyDTO.getBusinessType(),
-                companyDTO.getEmail(),
-                this.passwordEncoder.encode(companyDTO.getPassword()),
-                companyDTO.getReviews(),
-                companyDTO.getPhotoPath()
+    public String addBiz(BusinessDTO businessDTO) {
+        Business business = new Business(
+                businessDTO.getBusinessId(),
+                businessDTO.getBusinessName(),
+                businessDTO.getCity(),
+                businessDTO.getAddress(),
+                businessDTO.getRating(),
+                businessDTO.getDescription(),
+                businessDTO.getEmployees(),
+                businessDTO.getBusinessType(),
+                businessDTO.getEmail(),
+                this.passwordEncoder.encode(businessDTO.getPassword()),
+                businessDTO.getReviews(),
+                businessDTO.getPhotoPath()
         );
-        companyRepository.save(company);
-        return company.getCompanyName() + company.getBusinessType();
+        businessRepository.save(business);
+        return business.getBusinessName() + business.getBusinessType();
     }
 
     @Override
     public LoginMessage loginBiz(LoginDTO loginDTO) {
         String msg = "";
-        Company company = companyRepository.findByEmail(loginDTO.getEmail());
-        if (company != null) {
+        Business business = businessRepository.findByEmail(loginDTO.getEmail());
+        if (business != null) {
             String password = loginDTO.getPassword();
-            String encodedPassword = company.getPassword();
+            String encodedPassword = business.getPassword();
             Boolean isPasswordRight = passwordEncoder.matches(password, encodedPassword);
             if (isPasswordRight) {
-                Optional<Company> company1 = companyRepository.findBizByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
+                Optional<Business> company1 = businessRepository.findBizByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
                 if (company1.isPresent()) {
                     return new LoginMessage("Login was successfull", true);
                 } else {
@@ -61,5 +65,30 @@ public class BusinessImplementation implements BusinessService {
         } else {
             return new LoginMessage("Email does not exist", false);
         }
+    }
+
+    @Override
+    public BusinessDTO getBizDetailsCard(Long businessId) {
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(() -> new EntityNotFoundException("Business not found."));
+        int reviewCount = reviewRepository.countByBusinessBusinessId(businessId);
+
+        double rating = business.getRating();
+
+        return new BusinessDTO(
+                business.getBusinessId(),
+                business.getBusinessName(),
+                business.getCity(),
+                null,
+                rating,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                business.getPhotoPath(),
+                reviewCount
+        );
     }
 }

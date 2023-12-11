@@ -26,6 +26,6 @@ public class Employee {
     private List<Activity> activities;
 
     @ManyToOne
-    @JoinColumn(name = "companyId")
-    private Company company;
+    @JoinColumn(name = "businessId")
+    private Business business;
 }

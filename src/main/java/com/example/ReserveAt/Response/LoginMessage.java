@@ -1,8 +1,17 @@
 package com.example.ReserveAt.Response;
 
+import org.antlr.v4.runtime.Token;
+
 public class LoginMessage {
-    String message;
-    Boolean status;
+    private String message;
+    private Boolean status;
+    private String token;
+
+    public LoginMessage(String message, Boolean status, String token) {
+        this.message = message;
+        this.status = status;
+        this.token = token;
+    }
 
     public LoginMessage(String message, Boolean status) {
         this.message = message;
@@ -23,5 +32,13 @@ public class LoginMessage {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -9,16 +9,16 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "company")
+@Table(name = "business")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Company {
+public class Business {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "companyId")
-    private Long companyId;
-    @Column(name = "companyName",nullable = false)
-    private String companyName;
+    @Column(name = "businessId")
+    private Long businessId;
+    @Column(name = "businessName",nullable = false)
+    private String businessName;
     @Enumerated(EnumType.STRING)
     @Column(name = "city")
     private City city;
@@ -28,7 +28,7 @@ public class Company {
     private double rating;
     @Column(name = "description")
     private String description;
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "business")
     private List<Employee> employees;
     @Enumerated(EnumType.STRING)
     @Column(name = "businessType")
@@ -37,7 +37,7 @@ public class Company {
     private String email;
     @Column(name = "password")
     private String password;
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "business")
     private List<Review> reviews;
     @Column(name = "photoPath")
     private String photoPath;

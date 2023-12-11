@@ -1,6 +1,6 @@
 package com.example.ReserveAt.Controller;
 
-import com.example.ReserveAt.Dto.CompanyDTO;
+import com.example.ReserveAt.Dto.BusinessDTO;
 import com.example.ReserveAt.Dto.LoginDTO;
 import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
@@ -41,10 +41,10 @@ public class BusinessController {
 
         logger.info("Business register called");
         String photoPath = saveFileOnServer(photo);
-        CompanyDTO companyDTO = new CompanyDTO(null, companyName, city, address, 0.0, description, null, businessType, email, password, null, photoPath);
+        BusinessDTO businessDTO = new BusinessDTO(null, companyName, city, address, 0.0, description, null, businessType, email, password, null, photoPath, 0);
 
-        String id = businessService.addBiz(companyDTO);
-        logger.info("Business registered successfully" + companyDTO);
+        String id = businessService.addBiz(businessDTO);
+        logger.info("Business registered successfully" + businessDTO);
         return ResponseEntity.ok(id);
     }
 
@@ -70,5 +70,11 @@ public class BusinessController {
     public ResponseEntity<?> loginBiz(@RequestBody LoginDTO loginDTO) {
         LoginMessage loginMessage = businessService.loginBiz(loginDTO);
         return ResponseEntity.ok(loginMessage);
+    }
+
+    @GetMapping("/card/{businessId}")
+    public ResponseEntity<BusinessDTO> getBusinessDetailsCard(@PathVariable Long businessId) {
+        BusinessDTO businessDTO = businessService.getBizDetailsCard(businessId);
+        return ResponseEntity.ok(businessDTO);
     }
 }

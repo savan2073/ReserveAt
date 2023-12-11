@@ -5,8 +5,10 @@ import com.example.ReserveAt.Dto.UserDTO;
 import com.example.ReserveAt.Model.User;
 import com.example.ReserveAt.Repository.UserRepository;
 import com.example.ReserveAt.Response.LoginMessage;
+import com.example.ReserveAt.Service.JwtTokenProvider;
 import com.example.ReserveAt.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ public class UserImplementation implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -50,9 +54,11 @@ public class UserImplementation implements UserService {
             String encodedPassword = user.getPassword();
             Boolean isPasswordRight = passwordEncoder.matches(password, encodedPassword);
             if (isPasswordRight) {
+                String token = jwtTokenProvider.generateToken(new UsernamePasswordAuthenticationToken(
+                        loginDTO.getEmail(), loginDTO.getPassword()));
                 Optional<User> user1 = userRepository.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
                 if (user1.isPresent()){
-                    return new LoginMessage("Login success", true);
+                    return new LoginMessage("Login success", true, token);
                 }else {
                     return new LoginMessage("Login failed", false);
                 }

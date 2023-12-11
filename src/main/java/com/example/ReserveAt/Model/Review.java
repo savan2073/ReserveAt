@@ -26,8 +26,8 @@ public class Review {
     @Column(name = "reviewDate")
     private Date reviewDate;
     @ManyToOne
-    @JoinColumn(name = "companyId")
-    private Company company;
+    @JoinColumn(name = "businessId")
+    private Business business;
 
     public void setRating(double rating) {
         if (rating >= 1 && rating <= 5 && ((rating * 2) % 1 == 0)) {

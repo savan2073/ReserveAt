@@ -4,13 +4,12 @@ import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
 import com.example.ReserveAt.Model.Employee;
 import com.example.ReserveAt.Model.Review;
-import jakarta.persistence.*;
 
 import java.util.List;
 
-public class CompanyDTO {
-    private Long companyId;
-    private String companyName;
+public class BusinessDTO {
+    private Long businessId;
+    private String businessName;
     private City city;
     private String address;
     private double rating;
@@ -21,10 +20,11 @@ public class CompanyDTO {
     private String password;
     private List<Review> reviews;
     private String photoPath;
+    private int reviewCount;
 
-    public CompanyDTO(Long companyId, String companyName, City city, String address, double rating, String description, List<Employee> employees, BusinessType businessType, String email, String password, List<Review> reviews, String photoPath) {
-        this.companyId = companyId;
-        this.companyName = companyName;
+    public BusinessDTO(Long businessId, String businessName, City city, String address, double rating, String description, List<Employee> employees, BusinessType businessType, String email, String password, List<Review> reviews, String photoPath, int reviewCount) {
+        this.businessId = businessId;
+        this.businessName = businessName;
         this.city = city;
         this.address = address;
         this.rating = rating;
@@ -35,22 +35,23 @@ public class CompanyDTO {
         this.password = password;
         this.reviews = reviews;
         this.photoPath = photoPath;
+        this.reviewCount = reviewCount;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public Long getBusinessId() {
+        return businessId;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getBusinessName() {
+        return businessName;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 
     public City getCity() {
@@ -131,6 +132,14 @@ public class CompanyDTO {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
     }
 }
 
