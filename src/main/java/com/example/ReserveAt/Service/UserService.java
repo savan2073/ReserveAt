@@ -16,4 +16,6 @@ public interface UserService {
 
     LoginMessage loginUser(LoginDTO loginDTO);
 
+    UserDTO getUserById(Long userId);
+
 }

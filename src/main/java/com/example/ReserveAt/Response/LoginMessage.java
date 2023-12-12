@@ -6,11 +6,13 @@ public class LoginMessage {
     private String message;
     private Boolean status;
     private String token;
+    private Long userId;
 
-    public LoginMessage(String message, Boolean status, String token) {
+    public LoginMessage(String message, Boolean status, String token, Long userId) {
         this.message = message;
         this.status = status;
         this.token = token;
+        this.userId = userId;
     }
 
     public LoginMessage(String message, Boolean status) {
@@ -40,5 +42,13 @@ public class LoginMessage {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

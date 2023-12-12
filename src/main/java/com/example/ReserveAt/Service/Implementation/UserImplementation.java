@@ -5,6 +5,7 @@ import com.example.ReserveAt.Dto.UserDTO;
 import com.example.ReserveAt.Model.User;
 import com.example.ReserveAt.Repository.UserRepository;
 import com.example.ReserveAt.Response.LoginMessage;
+import com.example.ReserveAt.Response.UserNotFoundException;
 import com.example.ReserveAt.Service.JwtTokenProvider;
 import com.example.ReserveAt.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class UserImplementation implements UserService {
                         loginDTO.getEmail(), loginDTO.getPassword()));
                 Optional<User> user1 = userRepository.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
                 if (user1.isPresent()){
-                    return new LoginMessage("Login success", true, token);
+                    return new LoginMessage("Login success", true, token, user.getUserId());
                 }else {
                     return new LoginMessage("Login failed", false);
                 }
@@ -68,5 +69,27 @@ public class UserImplementation implements UserService {
         } else {
             return new LoginMessage("Email does not exist", false);
         }
+    }
+
+    @Override
+    public UserDTO getUserById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            return convertToDto(user.get());
+        } else {
+            throw new UserNotFoundException("Użytkownik o ID " + userId + " nie znaleziony");
+        }
+    }
+
+    private UserDTO convertToDto(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        //nie przekazywać hasła w DTO
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+
+        return userDTO;
     }
 }
