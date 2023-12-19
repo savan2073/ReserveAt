@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 
 @RestController
 @CrossOrigin
@@ -75,6 +76,16 @@ public class BusinessController {
     @GetMapping("/card/{businessId}")
     public ResponseEntity<BusinessDTO> getBusinessDetailsCard(@PathVariable Long businessId) {
         BusinessDTO businessDTO = businessService.getBizDetailsCard(businessId);
+        return ResponseEntity.ok(businessDTO);
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<BusinessDTO> getBusinessDetails(Principal principal) {
+        //użycie principal do pobrania email z tokena JWT
+        String email = principal.getName();
+
+        //pobieranie szczegółów biznesu na podstawie emaila
+        BusinessDTO businessDTO = businessService.getBusinessDetails(email);
         return ResponseEntity.ok(businessDTO);
     }
 }

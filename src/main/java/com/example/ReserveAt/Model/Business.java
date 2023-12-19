@@ -1,5 +1,6 @@
 package com.example.ReserveAt.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +30,7 @@ public class Business {
     @Column(name = "description")
     private String description;
     @OneToMany(mappedBy = "business")
+    @JsonManagedReference//pozwala na serializację employees
     private List<Employee> employees;
     @Enumerated(EnumType.STRING)
     @Column(name = "businessType")

@@ -1,5 +1,6 @@
 package com.example.ReserveAt.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,5 +28,6 @@ public class Employee {
 
     @ManyToOne
     @JoinColumn(name = "businessId")
+    @JsonBackReference//zapobieganie serializacji business
     private Business business;
 }

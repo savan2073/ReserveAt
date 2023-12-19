@@ -7,12 +7,14 @@ public class LoginMessage {
     private Boolean status;
     private String token;
     private Long userId;
+    private String role;
 
-    public LoginMessage(String message, Boolean status, String token, Long userId) {
+    public LoginMessage(String message, Boolean status, String token, Long userId, String role) {
         this.message = message;
         this.status = status;
         this.token = token;
         this.userId = userId;
+        this.role = role;
     }
 
     public LoginMessage(String message, Boolean status) {
@@ -50,5 +52,13 @@ public class LoginMessage {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

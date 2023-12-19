@@ -33,7 +33,8 @@ public class SecurityConfig {
                         customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(customizer ->
                         customizer.requestMatchers("/api/users/login", "/api/users/register").permitAll()
-                                .requestMatchers("/api/users/userpage/**").authenticated()
+                                .requestMatchers("/api/users/{userId}/**").hasAuthority("ROLE_USER")
+                                .requestMatchers("/api/business/details").hasAuthority("ROLE_BUSINESS")
                                 .anyRequest().permitAll())
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);

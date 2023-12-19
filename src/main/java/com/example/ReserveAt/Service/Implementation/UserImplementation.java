@@ -55,11 +55,12 @@ public class UserImplementation implements UserService {
             String encodedPassword = user.getPassword();
             Boolean isPasswordRight = passwordEncoder.matches(password, encodedPassword);
             if (isPasswordRight) {
-                String token = jwtTokenProvider.generateToken(new UsernamePasswordAuthenticationToken(
-                        loginDTO.getEmail(), loginDTO.getPassword()));
+                String token = jwtTokenProvider.generateToken(
+                        new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()),
+                        "user");
                 Optional<User> user1 = userRepository.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
                 if (user1.isPresent()){
-                    return new LoginMessage("Login success", true, token, user.getUserId());
+                    return new LoginMessage("Login success", true, token, user.getUserId(), "user");
                 }else {
                     return new LoginMessage("Login failed", false);
                 }

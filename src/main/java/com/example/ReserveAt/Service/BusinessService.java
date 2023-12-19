@@ -11,4 +11,6 @@ public interface BusinessService {
     LoginMessage loginBiz(LoginDTO loginDTO);
 
     BusinessDTO getBizDetailsCard(Long businessId);
+
+    BusinessDTO getBusinessDetails(String email);
 }
