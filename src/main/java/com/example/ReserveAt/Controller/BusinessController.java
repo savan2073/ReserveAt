@@ -1,11 +1,14 @@
 package com.example.ReserveAt.Controller;
 
 import com.example.ReserveAt.Dto.BusinessDTO;
+import com.example.ReserveAt.Dto.EmployeeDTO;
 import com.example.ReserveAt.Dto.LoginDTO;
 import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
+import com.example.ReserveAt.Model.Employee;
 import com.example.ReserveAt.Response.LoginMessage;
 import com.example.ReserveAt.Service.BusinessService;
+import com.example.ReserveAt.Service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -28,6 +33,8 @@ public class BusinessController {
     private static final Logger logger = LoggerFactory.getLogger(BusinessController.class);
     @Autowired
     private BusinessService businessService;
+    @Autowired
+    private EmployeeService employeeService;
 
     @PostMapping("/register")
     public ResponseEntity<?> saveBusiness(
@@ -87,5 +94,22 @@ public class BusinessController {
         //pobieranie szczegółów biznesu na podstawie emaila
         BusinessDTO businessDTO = businessService.getBusinessDetails(email);
         return ResponseEntity.ok(businessDTO);
+    }
+
+    @GetMapping("/{businessId}/employees")
+    public ResponseEntity<List<EmployeeDTO>> getEmployeesByBusinessId(@PathVariable Long businessId) {
+        List<Employee> employees = employeeService.getAllEmployeesByBusinessId(businessId);
+        List<EmployeeDTO> employeeDTOs = employees.stream()
+                .map(this::convertToEmployeeDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(employeeDTOs);
+    }
+
+    private EmployeeDTO convertToEmployeeDTO(Employee employee) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeId(employee.getEmployeeId());
+        employeeDTO.setEmployeeName(employee.getEmployeeName());
+        employeeDTO.setEmployeeSurname(employee.getEmployeeSurname());
+        return employeeDTO;
     }
 }

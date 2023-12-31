@@ -1,6 +1,7 @@
 package com.example.ReserveAt.Model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Employee {
     @Column(name = "employeeSurname")
     private String employeeSurname;
     @OneToMany(mappedBy = "employee")
+    @JsonIgnore
     private List<Activity> activities;
 
     @ManyToOne

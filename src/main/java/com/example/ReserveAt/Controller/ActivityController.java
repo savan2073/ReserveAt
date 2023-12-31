@@ -1,15 +1,17 @@
 package com.example.ReserveAt.Controller;
 
+import com.example.ReserveAt.Dto.ActivityDTO;
 import com.example.ReserveAt.Model.Activity;
 import com.example.ReserveAt.Service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/activity")
+@RequestMapping("/api/activities")
 public class ActivityController {
     private final ActivityService activityService;
 
@@ -18,10 +20,32 @@ public class ActivityController {
         this.activityService = activityService;
     }
     //create new activity
-    @PostMapping
-    public ResponseEntity<Activity> createActivity(@RequestBody Activity activity) {
-        Activity newActivity = activityService.createActivity(activity);
-        return ResponseEntity.ok(newActivity);
+    @PostMapping("/add/{employeeId}")
+    public ResponseEntity<ActivityDTO> createActivity(@RequestBody ActivityDTO activityDTO, @PathVariable Long employeeId) {
+        Activity newActivity = activityService.addActivity(activityDTO, employeeId);
+        ActivityDTO newActivityDTO = convertToDTO(newActivity);
+        return ResponseEntity.ok(newActivityDTO);
+    }
+
+    //convert entity to dto
+    private ActivityDTO convertToDTO(Activity activity) {
+        ActivityDTO activityDTO = new ActivityDTO();
+        activityDTO.setActivityName(activity.getActivityName());
+        activityDTO.setDescription(activity.getDescription());
+        activityDTO.setPrice(activity.getPrice());
+        activityDTO.setDurationOfTreatment((int) activity.getDurationOfTreatment().toMinutes());
+        // Dodaj pozostałe potrzebne pola
+        return activityDTO;
+    }
+    //convert dto to entity
+    private Activity convertToEntity(ActivityDTO activityDTO) {
+        Activity activity = new Activity();
+        activity.setActivityName(activityDTO.getActivityName());
+        activity.setDescription(activityDTO.getDescription());
+        activity.setPrice(activityDTO.getPrice());
+        // Konwersja minut na Duration
+        activity.setDurationOfTreatment(Duration.ofMinutes(activityDTO.getDurationOfTreatment()));
+        return activity;
     }
     //get all activites
     @GetMapping()

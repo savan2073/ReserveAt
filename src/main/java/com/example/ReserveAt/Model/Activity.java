@@ -1,5 +1,6 @@
 package com.example.ReserveAt.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class Activity {
 
     @ManyToOne
     @JoinColumn(name = "employeeID", nullable = false)
+    @JsonIgnore
     private Employee employee;
 
 

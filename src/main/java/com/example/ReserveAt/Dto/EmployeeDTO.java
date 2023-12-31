@@ -20,6 +20,10 @@ public class EmployeeDTO {
         this.businessId = businessId;
     }
 
+    public EmployeeDTO() {
+
+    }
+
     public Long getEmployeeId() {
         return employeeId;
     }
