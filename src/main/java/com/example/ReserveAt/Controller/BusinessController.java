@@ -3,6 +3,7 @@ package com.example.ReserveAt.Controller;
 import com.example.ReserveAt.Dto.BusinessDTO;
 import com.example.ReserveAt.Dto.EmployeeDTO;
 import com.example.ReserveAt.Dto.LoginDTO;
+import com.example.ReserveAt.Model.Business;
 import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
 import com.example.ReserveAt.Model.Employee;
@@ -12,10 +13,12 @@ import com.example.ReserveAt.Service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -112,4 +115,22 @@ public class BusinessController {
         employeeDTO.setEmployeeSurname(employee.getEmployeeSurname());
         return employeeDTO;
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<BusinessDTO>> searchBusinesses(
+            @RequestParam("city") City city,
+            @RequestParam("type") BusinessType type,
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        Page<BusinessDTO> businessDTOs = businessService.findBusinessesByTypeAndCity(city, type, pageable);
+        return ResponseEntity.ok(businessDTOs);
+    }
+
+
+    @GetMapping("/{city}/{businessName}")
+    public ResponseEntity<BusinessDTO> getBusinessDetails(@PathVariable String businessName, @PathVariable String city) {
+        BusinessDTO businessDTO = businessService.getBusinessByNameAndCity(businessName, city);
+        return ResponseEntity.ok(businessDTO);
+    }
+
 }

@@ -3,6 +3,8 @@ package com.example.ReserveAt.Service.Implementation;
 import com.example.ReserveAt.Dto.BusinessDTO;
 import com.example.ReserveAt.Dto.LoginDTO;
 import com.example.ReserveAt.Model.Business;
+import com.example.ReserveAt.Model.BusinessType;
+import com.example.ReserveAt.Model.City;
 import com.example.ReserveAt.Repository.BusinessRepository;
 import com.example.ReserveAt.Repository.ReviewRepository;
 import com.example.ReserveAt.Response.LoginMessage;
@@ -10,10 +12,15 @@ import com.example.ReserveAt.Service.BusinessService;
 import com.example.ReserveAt.Service.JwtTokenProvider;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -105,6 +112,25 @@ public class BusinessImplementation implements BusinessService {
     public BusinessDTO getBusinessDetails(String email) {
         Business business = businessRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Business not found"));
+        return convertToBusinessDTO(business);
+    }
+
+    @Override
+    public Page<BusinessDTO> findBusinessesByTypeAndCity(City city, BusinessType businessType, Pageable pageable) {
+        Page<Business> businesses = businessRepository.findByCityAndBusinessType(city, businessType, pageable);
+        return businesses.map(this::convertToBusinessDTO);
+    }
+
+    @Override
+    public BusinessDTO getBusinessByNameAndCity(String businessName, String cityString) {
+        City city;
+        try {
+            city = City.valueOf(cityString.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nieprawidłowa nazwa miasta.");
+        }
+        Business business = businessRepository.findByBusinessNameAndCity(businessName, city)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nie znaleziono biznesu"));
         return convertToBusinessDTO(business);
     }
 
