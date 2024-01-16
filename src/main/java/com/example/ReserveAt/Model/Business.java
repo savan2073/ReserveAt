@@ -43,5 +43,7 @@ public class Business {
     private List<Review> reviews;
     @Column(name = "photoPath")
     private String photoPath;
+    @OneToMany(mappedBy = "business")
+    private List<WorkingHours> workingHours;
 
 }

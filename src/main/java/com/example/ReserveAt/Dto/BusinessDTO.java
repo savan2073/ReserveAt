@@ -1,9 +1,6 @@
 package com.example.ReserveAt.Dto;
 
-import com.example.ReserveAt.Model.BusinessType;
-import com.example.ReserveAt.Model.City;
-import com.example.ReserveAt.Model.Employee;
-import com.example.ReserveAt.Model.Review;
+import com.example.ReserveAt.Model.*;
 
 import java.util.List;
 
@@ -14,15 +11,16 @@ public class BusinessDTO {
     private String address;
     private double rating;
     private String description;
-    private List<Employee> employees;
+    private List<EmployeeDTO> employees;
     private BusinessType businessType;
     private String email;
     private String password;
     private List<Review> reviews;
     private String photoPath;
     private int reviewCount;
+    private List<WorkingHoursDTO> workingHours;
 
-    public BusinessDTO(Long businessId, String businessName, City city, String address, double rating, String description, List<Employee> employees, BusinessType businessType, String email, String password, List<Review> reviews, String photoPath, int reviewCount) {
+    public BusinessDTO(Long businessId, String businessName, City city, String address, double rating, String description, List<EmployeeDTO> employees, BusinessType businessType, String email, String password, List<Review> reviews, String photoPath, int reviewCount, List<WorkingHoursDTO> workingHours) {
         this.businessId = businessId;
         this.businessName = businessName;
         this.city = city;
@@ -36,6 +34,7 @@ public class BusinessDTO {
         this.reviews = reviews;
         this.photoPath = photoPath;
         this.reviewCount = reviewCount;
+        this.workingHours = workingHours;
     }
 
     public Long getBusinessId() {
@@ -86,11 +85,11 @@ public class BusinessDTO {
         this.description = description;
     }
 
-    public List<Employee> getEmployees() {
+    public List<EmployeeDTO> getEmployees() {
         return employees;
     }
 
-    public void setEmployees(List<Employee> employees) {
+    public void setEmployees(List<EmployeeDTO> employees) {
         this.employees = employees;
     }
 
@@ -140,6 +139,14 @@ public class BusinessDTO {
 
     public void setReviewCount(int reviewCount) {
         this.reviewCount = reviewCount;
+    }
+
+    public List<WorkingHoursDTO> getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(List<WorkingHoursDTO> workingHours) {
+        this.workingHours = workingHours;
     }
 }
 

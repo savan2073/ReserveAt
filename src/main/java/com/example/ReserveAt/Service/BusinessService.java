@@ -2,6 +2,7 @@ package com.example.ReserveAt.Service;
 
 import com.example.ReserveAt.Dto.BusinessDTO;
 import com.example.ReserveAt.Dto.LoginDTO;
+import com.example.ReserveAt.Dto.WorkingHoursDTO;
 import com.example.ReserveAt.Model.Business;
 import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
@@ -24,4 +25,12 @@ public interface BusinessService {
     Page<BusinessDTO> findBusinessesByTypeAndCity(City city, BusinessType businessType, Pageable pageable);
 
     BusinessDTO getBusinessByNameAndCity(String businessName, String city);
+
+    void addWorkingHours(Long businessId, List<WorkingHoursDTO> workingHoursDTOs);
+
+    List<WorkingHoursDTO> getWorkingHours(Long businessId);
+
+    void updateWorkingHours(Long businessId, List<WorkingHoursDTO> workingHoursDTOs);
+
+    void deleteWorkingHours(Long workingHoursId);
 }

@@ -3,6 +3,7 @@ package com.example.ReserveAt.Controller;
 import com.example.ReserveAt.Dto.BusinessDTO;
 import com.example.ReserveAt.Dto.EmployeeDTO;
 import com.example.ReserveAt.Dto.LoginDTO;
+import com.example.ReserveAt.Dto.WorkingHoursDTO;
 import com.example.ReserveAt.Model.Business;
 import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
@@ -52,7 +53,7 @@ public class BusinessController {
 
         logger.info("Business register called");
         String photoPath = saveFileOnServer(photo);
-        BusinessDTO businessDTO = new BusinessDTO(null, companyName, city, address, 0.0, description, null, businessType, email, password, null, photoPath, 0);
+        BusinessDTO businessDTO = new BusinessDTO(null, companyName, city, address, 0.0, description, null, businessType, email, password, null, photoPath, 0, null);
 
         String id = businessService.addBiz(businessDTO);
         logger.info("Business registered successfully" + businessDTO);
@@ -132,5 +133,33 @@ public class BusinessController {
         BusinessDTO businessDTO = businessService.getBusinessByNameAndCity(businessName, city);
         return ResponseEntity.ok(businessDTO);
     }
+
+    //workinghours
+    @PostMapping("/{businessId}/working-hours")
+    public ResponseEntity<?> addWorkingHours(@PathVariable Long businessId, @RequestBody List<WorkingHoursDTO> workingHoursDTOs) {
+        System.out.println("Otrzymane dane godzin pracy: " + workingHoursDTOs);
+        businessService.addWorkingHours(businessId, workingHoursDTOs);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/{businessId}/working-hours")
+    public ResponseEntity<List<WorkingHoursDTO>> getWorkingHours(@PathVariable Long businessId) {
+        List<WorkingHoursDTO> workingHours = businessService.getWorkingHours(businessId);
+        return ResponseEntity.ok(workingHours);
+    }
+
+    @PutMapping("/{businessId}/working-hours")
+    public ResponseEntity<?> updateWorkingHours(@PathVariable Long businessId, @RequestBody List<WorkingHoursDTO> workingHoursDTOs) {
+        businessService.updateWorkingHours(businessId, workingHoursDTOs);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/working-hours/{workingHoursId}")
+    public ResponseEntity<?> deleteWorkingHours(@PathVariable Long workingHoursId) {
+        businessService.deleteWorkingHours(workingHoursId);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

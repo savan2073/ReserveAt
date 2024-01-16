@@ -1,12 +1,10 @@
 package com.example.ReserveAt.Service.Implementation;
 
-import com.example.ReserveAt.Dto.BusinessDTO;
-import com.example.ReserveAt.Dto.LoginDTO;
-import com.example.ReserveAt.Model.Business;
-import com.example.ReserveAt.Model.BusinessType;
-import com.example.ReserveAt.Model.City;
+import com.example.ReserveAt.Dto.*;
+import com.example.ReserveAt.Model.*;
 import com.example.ReserveAt.Repository.BusinessRepository;
 import com.example.ReserveAt.Repository.ReviewRepository;
+import com.example.ReserveAt.Repository.WorkingHoursRepository;
 import com.example.ReserveAt.Response.LoginMessage;
 import com.example.ReserveAt.Service.BusinessService;
 import com.example.ReserveAt.Service.JwtTokenProvider;
@@ -20,8 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessImplementation implements BusinessService {
@@ -31,12 +31,15 @@ public class BusinessImplementation implements BusinessService {
     @Autowired
     private ReviewRepository reviewRepository;
     @Autowired
+    private WorkingHoursRepository workingHoursRepository;
+    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
     public String addBiz(BusinessDTO businessDTO) {
+        List<Employee> employees = convertToEmployeeList(businessDTO.getEmployees());
         Business business = new Business(
                 businessDTO.getBusinessId(),
                 businessDTO.getBusinessName(),
@@ -44,16 +47,39 @@ public class BusinessImplementation implements BusinessService {
                 businessDTO.getAddress(),
                 businessDTO.getRating(),
                 businessDTO.getDescription(),
-                businessDTO.getEmployees(),
+                employees,
                 businessDTO.getBusinessType(),
                 businessDTO.getEmail(),
                 this.passwordEncoder.encode(businessDTO.getPassword()),
                 businessDTO.getReviews(),
-                businessDTO.getPhotoPath()
+                businessDTO.getPhotoPath(),
+                null
         );
         businessRepository.save(business);
         return business.getBusinessName() + business.getBusinessType();
     }
+
+    private List<Employee> convertToEmployeeList(List<EmployeeDTO> employeeDTOs) {
+        if (employeeDTOs == null) {
+            return null;
+        }
+        return employeeDTOs.stream().map(this::convertToEmployee).collect(Collectors.toList());
+    }
+
+    private Employee convertToEmployee(EmployeeDTO employeeDTO) {
+        Long businessId = employeeDTO.getBusinessId();
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(() -> new EntityNotFoundException("Business not found with id: " + businessId));
+        return new Employee(
+                employeeDTO.getEmployeeId(),
+                employeeDTO.getEmployeeName(),
+                employeeDTO.getEmployeeSurname(),
+                null,
+                business
+                // inne potrzebne pola...
+        );
+    }
+
 
     @Override
     public LoginMessage loginBiz(LoginDTO loginDTO) {
@@ -104,7 +130,8 @@ public class BusinessImplementation implements BusinessService {
                 null,
                 null,
                 business.getPhotoPath(),
-                reviewCount
+                reviewCount,
+                null
         );
     }
 
@@ -136,6 +163,38 @@ public class BusinessImplementation implements BusinessService {
 
     private BusinessDTO convertToBusinessDTO(Business business) {
         int reviewCount = reviewRepository.countByBusinessBusinessId(business.getBusinessId());
+
+        // Konwersja pracowników
+        List<EmployeeDTO> employeeDTOs = business.getEmployees().stream().map(employee -> {
+            // Tworzenie listy ActivityDTO z listy Activity
+            List<ActivityDTO> activityDTOs = employee.getActivities().stream()
+                    .map(this::convertToActivityDTO)
+                    .collect(Collectors.toList());
+
+            // Tworzenie EmployeeDTO
+            EmployeeDTO employeeDTO = new EmployeeDTO(
+                    employee.getEmployeeId(),
+                    employee.getEmployeeName(),
+                    employee.getEmployeeSurname(),
+                    activityDTOs, // Użyj przekonwertowanej listy ActivityDTO
+                    employee.getBusiness().getBusinessId() // Zakładając, że chcesz tu ID biznesu
+            );
+
+            return employeeDTO;
+        }).collect(Collectors.toList());
+
+        // Konwersja godzin pracy
+        List<WorkingHoursDTO> workingHoursDTOs = business.getWorkingHours().stream()
+                .map(workingHours -> new WorkingHoursDTO(
+                        workingHours.getId(),
+                        workingHours.getDayOfWeek(),
+                        workingHours.getStartTime(),
+                        workingHours.getEndTime(),
+                        workingHours.getBusiness().getBusinessId()
+                ))
+                .collect(Collectors.toList());
+
+
         return new BusinessDTO(
                 business.getBusinessId(),
                 business.getBusinessName(),
@@ -143,13 +202,84 @@ public class BusinessImplementation implements BusinessService {
                 business.getAddress(),
                 business.getRating(),
                 business.getDescription(),
-                business.getEmployees(),
+                employeeDTOs,
                 business.getBusinessType(),
                 business.getEmail(),
                 null,
                 business.getReviews(),
                 business.getPhotoPath(),
-                reviewCount
+                reviewCount,
+                workingHoursDTOs
         );
+    }
+
+    private ActivityDTO convertToActivityDTO(Activity activity) {
+        return new ActivityDTO(
+                activity.getId(),
+                activity.getActivityName(),
+                activity.getDescription(),
+                activity.getPrice(),
+                (int) activity.getDurationOfTreatment().toMinutes()
+        );
+    }
+
+
+    public void addWorkingHours(Long businessId, List<WorkingHoursDTO> workingHoursDTOs) {
+        for (WorkingHoursDTO dto : workingHoursDTOs) {
+            System.out.println("DTO DayOfWeek: " + dto.getDayOfWeek() + ", StartTime: " + dto.getStartTime() + ", EndTime: " + dto.getEndTime());
+        }
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(() -> new EntityNotFoundException("Business not found with id: " + businessId));
+
+        List<WorkingHours> workingHoursList = workingHoursDTOs.stream()
+                .map(dto -> {
+                    WorkingHours workingHours = new WorkingHours();
+                    workingHours.setBusiness(business);
+                    workingHours.setDayOfWeek(dto.getDayOfWeek());
+                    workingHours.setStartTime(dto.getStartTime());
+                    workingHours.setEndTime(dto.getEndTime());
+
+                    System.out.println("zmapowane godziny pracy: " + workingHours);
+
+                    return workingHours;
+                })
+                .toList();
+
+        workingHoursRepository.saveAll(workingHoursList);
+    }
+
+
+
+    public List<WorkingHoursDTO> getWorkingHours(Long businessId) {
+        List<WorkingHours> workingHours = workingHoursRepository.findByBusinessBusinessId(businessId);
+
+        return workingHours.stream()
+                .map(workingHour -> new WorkingHoursDTO(
+                        workingHour.getId(),
+                        workingHour.getDayOfWeek(),
+                        workingHour.getStartTime(),
+                        workingHour.getEndTime(),
+                        workingHour.getBusiness().getBusinessId()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public void updateWorkingHours(Long businessId, List<WorkingHoursDTO> workingHoursDTOs) {
+        for (WorkingHoursDTO dto : workingHoursDTOs) {
+            WorkingHours workingHours = workingHoursRepository.findById(dto.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("WorkingHours not found with id: " + dto.getId()));
+
+            workingHours.setDayOfWeek(dto.getDayOfWeek());
+            workingHours.setStartTime(dto.getStartTime());
+            workingHours.setEndTime(dto.getEndTime());
+            workingHoursRepository.save(workingHours);
+        }
+    }
+
+    public void deleteWorkingHours(Long workingHoursId) {
+        if (!workingHoursRepository.existsById(workingHoursId)) {
+            throw new EntityNotFoundException("WorkingHours not found with id: " + workingHoursId);
+        }
+        workingHoursRepository.deleteById(workingHoursId);
     }
 }

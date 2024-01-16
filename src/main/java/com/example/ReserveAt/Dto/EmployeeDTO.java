@@ -11,7 +11,7 @@ public class EmployeeDTO {
     private Long employeeId;
     private String employeeName;
     private String employeeSurname;
-    private List<Activity> activities;
+    private List<ActivityDTO> activities;
     private Long businessId;
 
     public EmployeeDTO(String employeeName, String employeeSurname, Long businessId) {
@@ -20,9 +20,18 @@ public class EmployeeDTO {
         this.businessId = businessId;
     }
 
+    public EmployeeDTO(Long employeeId, String employeeName, String employeeSurname, List<ActivityDTO> activities, Long businessId) {
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.employeeSurname = employeeSurname;
+        this.activities = activities;
+        this.businessId = businessId;
+    }
+
     public EmployeeDTO() {
 
     }
+
 
     public Long getEmployeeId() {
         return employeeId;
@@ -48,11 +57,11 @@ public class EmployeeDTO {
         this.employeeSurname = employeeSurname;
     }
 
-    public List<Activity> getActivities() {
+    public List<ActivityDTO> getActivities() {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(List<ActivityDTO> activities) {
         this.activities = activities;
     }
 
