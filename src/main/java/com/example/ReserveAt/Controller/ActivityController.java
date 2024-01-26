@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/activities")
 public class ActivityController {
     private final ActivityService activityService;

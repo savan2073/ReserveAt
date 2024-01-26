@@ -58,4 +58,12 @@ public class ActivityDTO {
     public void setDurationOfTreatment(int durationOfTreatment) {
         this.durationOfTreatment = durationOfTreatment;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

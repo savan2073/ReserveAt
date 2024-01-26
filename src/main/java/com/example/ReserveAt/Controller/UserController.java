@@ -5,6 +5,7 @@ import com.example.ReserveAt.Model.User;
 import com.example.ReserveAt.Repository.UserRepository;
 import com.example.ReserveAt.Response.LoginMessage;
 import com.example.ReserveAt.Service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,8 @@ public class UserController {
         String email = principal.getName();
 
         //pobieranie danych zalogowanego użytkownika
-        User currentUser = userRepository.findByEmail(email);
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
 
         //sprawdzanie czy zalogowany użytkownika ma dostęp do podanego profilu
         if (currentUser != null && currentUser.getUserId().equals(userId)) {

@@ -8,6 +8,7 @@ import com.example.ReserveAt.Response.LoginMessage;
 import com.example.ReserveAt.Response.UserNotFoundException;
 import com.example.ReserveAt.Service.JwtTokenProvider;
 import com.example.ReserveAt.Service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,7 +50,8 @@ public class UserImplementation implements UserService {
     @Override
     public LoginMessage loginUser(LoginDTO loginDTO) {
         String msg = "";
-        User user = userRepository.findByEmail(loginDTO.getEmail());
+        User user = userRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + loginDTO.getEmail()));
         if (user != null) {
             String password = loginDTO.getPassword();
             String encodedPassword = user.getPassword();

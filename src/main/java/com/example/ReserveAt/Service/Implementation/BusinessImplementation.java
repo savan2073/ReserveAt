@@ -171,6 +171,8 @@ public class BusinessImplementation implements BusinessService {
                     .map(this::convertToActivityDTO)
                     .collect(Collectors.toList());
 
+            System.out.println("activityDTOS: " + activityDTOs);
+
             // Tworzenie EmployeeDTO
             EmployeeDTO employeeDTO = new EmployeeDTO(
                     employee.getEmployeeId(),
@@ -214,6 +216,7 @@ public class BusinessImplementation implements BusinessService {
     }
 
     private ActivityDTO convertToActivityDTO(Activity activity) {
+        System.out.println("Activity o id: " + activity.getId());
         return new ActivityDTO(
                 activity.getId(),
                 activity.getActivityName(),

@@ -1,6 +1,10 @@
 package com.example.ReserveAt.Service;
 
+import com.example.ReserveAt.Model.User;
+import com.example.ReserveAt.Repository.UserRepository;
 import io.jsonwebtoken.*;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +26,8 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
+    @Autowired
+    private UserRepository userRepository;
 
     private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
 
@@ -29,6 +35,9 @@ public class JwtTokenProvider {
     public String generateToken(Authentication authentication, String accountType) {
         //uzyskanie nazwy użytkownika z obiektu authentication
         String username = authentication.getName();
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + username));
+        Long userId = user.getUserId();
         log.info("username pobrane z authentication do generate token: " + username);
 
         Date now = new Date();
@@ -36,6 +45,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId", userId)
                 .claim("accountType", accountType)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
@@ -81,4 +91,10 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(username, "", authorities);
 
     }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+        return claims.get("userId", Long.class);
+    }
+
 }
