@@ -6,6 +6,9 @@ import com.example.ReserveAt.Model.User;
 import com.example.ReserveAt.Repository.UserRepository;
 import com.example.ReserveAt.Response.UnavailableEmployeeException;
 import com.example.ReserveAt.Service.BookingService;
+import com.example.ReserveAt.Service.Implementation.BookingImplementation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,8 @@ import java.util.Optional;
 @RequestMapping("/api/bookings")
 public class BookingController {
 
+    private static final Logger logger = LoggerFactory.getLogger(BookingController.class);
+
     @Autowired
     private BookingService bookingService;
     @Autowired
@@ -30,6 +35,7 @@ public class BookingController {
 
     @PostMapping("/create")
     public ResponseEntity<Booking> createBooking(@RequestBody BookingDto bookingDto, Principal principal) {
+        logger.info("Received booking data: {}", bookingDto);
         try {
             String userEmail = principal.getName();
             Optional<User> userOptional = userRepository.findByEmail(userEmail);
@@ -40,6 +46,7 @@ public class BookingController {
             }
 
             User user = userOptional.get();
+            logger.info("UserId from token: {}", user.getUserId());
             Booking newBooking = bookingService.createBooking(
                     bookingDto.getUserId(),
                     bookingDto.getEmployeeId(),

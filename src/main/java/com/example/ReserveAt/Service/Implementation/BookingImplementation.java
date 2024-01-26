@@ -1,5 +1,6 @@
 package com.example.ReserveAt.Service.Implementation;
 
+import com.example.ReserveAt.Controller.BusinessController;
 import com.example.ReserveAt.Model.Activity;
 import com.example.ReserveAt.Model.Booking;
 import com.example.ReserveAt.Model.Employee;
@@ -11,6 +12,8 @@ import com.example.ReserveAt.Repository.UserRepository;
 import com.example.ReserveAt.Response.UnavailableEmployeeException;
 import com.example.ReserveAt.Service.BookingService;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,7 @@ import java.util.Optional;
 @Service
 public class BookingImplementation implements BookingService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BookingImplementation.class);
     @Autowired
     private BookingRepository bookingRepository;
     @Autowired
@@ -33,6 +37,7 @@ public class BookingImplementation implements BookingService {
     private ActivityRepository activityRepository;
     @Override
     public boolean isEmployeeAvailable(Long employeeId, LocalDate bookingDate, LocalTime startTime, Duration duration) {
+        logger.info("Checking availability for EmployeeId: {}", employeeId);
         LocalTime endTime = startTime.plus(duration);
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + employeeId));
@@ -56,6 +61,7 @@ public class BookingImplementation implements BookingService {
 
     @Override
     public Booking createBooking(Long userId, Long employeeId, Long activityId, LocalDate bookingDate, LocalTime startTime, Duration duration) {
+        logger.info("UserId: {}, EmployeeId: {}, ActivityId: {}", userId, employeeId, activityId);
         if (isEmployeeAvailable(employeeId, bookingDate, startTime, duration)) {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));

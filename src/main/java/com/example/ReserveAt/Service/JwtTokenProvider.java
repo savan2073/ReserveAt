@@ -41,7 +41,7 @@ public class JwtTokenProvider {
         log.info("username pobrane z authentication do generate token: " + username);
 
         Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + 1200000);
+        Date expirationDate = new Date(now.getTime() + 12000000);
 
         return Jwts.builder()
                 .setSubject(username)
