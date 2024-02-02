@@ -1,6 +1,5 @@
 package com.example.ReserveAt.Service.Implementation;
 
-import com.example.ReserveAt.Controller.BusinessController;
 import com.example.ReserveAt.Model.Activity;
 import com.example.ReserveAt.Model.Booking;
 import com.example.ReserveAt.Model.Employee;
@@ -21,7 +20,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookingImplementation implements BookingService {
@@ -69,6 +67,8 @@ public class BookingImplementation implements BookingService {
                     .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + employeeId));
             Activity activity = activityRepository.findById(activityId)
                     .orElseThrow(() -> new EntityNotFoundException("Activity not found with id: " + activityId));
+            long durationMinutes = duration.getSeconds();
+            logger.info("Duration przekazywane: " + duration + ", i duration po konwersji: " + durationMinutes);
             //tworzenie nowej rezerwacji
             Booking booking = new Booking();
             //szczegoly rezerwacji
@@ -77,7 +77,7 @@ public class BookingImplementation implements BookingService {
             booking.setActivity(activity);
             booking.setBookingDate(bookingDate);
             booking.setStartTime(startTime);
-            booking.setEndTime(startTime.plus(duration));
+            booking.setEndTime(startTime.plusMinutes(durationMinutes));
             booking.setPrice(activity.getPrice());
             booking.setBusiness(employee.getBusiness());
             bookingRepository.save(booking);

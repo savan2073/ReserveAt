@@ -33,4 +33,6 @@ public interface BusinessService {
     void updateWorkingHours(Long businessId, List<WorkingHoursDTO> workingHoursDTOs);
 
     void deleteWorkingHours(Long workingHoursId);
+
+    void updateBusiness(Long businessId, BusinessDTO businessDTO);
 }

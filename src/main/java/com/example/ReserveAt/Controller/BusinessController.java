@@ -100,6 +100,13 @@ public class BusinessController {
         return ResponseEntity.ok(businessDTO);
     }
 
+    @PutMapping("/{businessId}")
+    public ResponseEntity<BusinessDTO> updateBusiness(@PathVariable Long businessId, @RequestBody BusinessDTO businessDTO) {
+        businessService.updateBusiness(businessId, businessDTO);
+        return ResponseEntity.ok().body(businessDTO);
+    }
+
+
     @GetMapping("/{businessId}/employees")
     public ResponseEntity<List<EmployeeDTO>> getEmployeesByBusinessId(@PathVariable Long businessId) {
         List<Employee> employees = employeeService.getAllEmployeesByBusinessId(businessId);

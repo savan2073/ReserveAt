@@ -16,11 +16,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -284,5 +292,22 @@ public class BusinessImplementation implements BusinessService {
             throw new EntityNotFoundException("WorkingHours not found with id: " + workingHoursId);
         }
         workingHoursRepository.deleteById(workingHoursId);
+    }
+
+    @Override
+    public void updateBusiness(Long businessId, BusinessDTO businessDTO) {
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(() -> new EntityNotFoundException("Business not found with id: " + businessId));
+
+        business.setBusinessName(businessDTO.getBusinessName());
+        business.setCity(businessDTO.getCity());
+        business.setAddress(businessDTO.getAddress());
+        business.setDescription(businessDTO.getDescription());
+        business.setBusinessType(businessDTO.getBusinessType());
+        business.setEmail(businessDTO.getEmail());
+        //hasło i rating bez zmian
+        //TODO:: osobna zmiana zdjęcia biznesu
+
+        businessRepository.save(business);
     }
 }
