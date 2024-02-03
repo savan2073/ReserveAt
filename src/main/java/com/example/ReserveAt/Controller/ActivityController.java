@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -56,20 +57,29 @@ public class ActivityController {
     }
     //get activity by id
     @GetMapping("/{id}")
-    public ResponseEntity<Activity> getActivityById(@PathVariable int id) {
+    public ResponseEntity<Activity> getActivityById(@PathVariable Long id) {
         Activity activity = activityService.findById(id);
         return ResponseEntity.ok(activity);
     }
     //update existing activity
     @PutMapping("/{id}")
-    public ResponseEntity<Activity> updateActivity(@PathVariable int id, @RequestBody Activity activityDetails) {
-        Activity updatedActivity = activityService.update(id, activityDetails);
+    public ResponseEntity<Activity> updateActivity(@PathVariable Long id, @RequestBody ActivityDTO activityDTO) {
+        Activity updatedActivity = activityService.update(id, activityDTO);
         return ResponseEntity.ok(updatedActivity);
     }
     //delete activity
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteActivity(@PathVariable int id) {
+    public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
         activityService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<ActivityDTO>> getActivitiesByEmployeeId(@PathVariable Long employeeId) {
+        List<Activity> activities = activityService.findAllByEmployeeId(employeeId);
+        List<ActivityDTO> activityDTOs = activities.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(activityDTOs);
     }
 }

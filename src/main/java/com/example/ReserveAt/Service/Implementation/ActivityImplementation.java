@@ -35,21 +35,35 @@ public class ActivityImplementation implements ActivityService {
 
     @Override
     public List<Activity> getAllActivities() {
-        return null;
+        return activityRepository.findAll();
     }
 
     @Override
-    public Activity findById(int id) {
-        return null;
+    public Activity findById(Long id) {
+        return activityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Activity not found with id: " + id));
     }
 
     @Override
-    public Activity update(int id, Activity activityDetails) {
-        return null;
+    public Activity update(Long id, ActivityDTO activityDTO) {
+        Activity activity = findById(id); //metodfa findById, aby upewnić się że istnieje
+
+        activity.setActivityName(activityDTO.getActivityName());
+        activity.setDescription(activityDTO.getDescription());
+        activity.setPrice(activityDTO.getPrice());
+        activity.setDurationOfTreatment(Duration.ofMinutes(activityDTO.getDurationOfTreatment()));
+
+        return activityRepository.save(activity);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
+        Activity activity = findById(id);
+        activityRepository.delete(activity);
+    }
 
+    @Override
+    public List<Activity> findAllByEmployeeId(Long employeeId) {
+        return activityRepository.findAllByEmployeeEmployeeId(employeeId);
     }
 }

@@ -18,11 +18,14 @@ public interface ActivityService {
     public List<Activity> getAllActivities();
 
     //get activity by id
-    public Activity findById(int id);
+    public Activity findById(Long id);
 
     //update existing activity
-    public Activity update(int id, Activity activityDetails);
+    public Activity update(Long id, ActivityDTO activityDTO);
 
     //delete activity
-    public void delete(int id);
+    public void delete(Long id);
+
+    //get all activities by employeeid
+    List<Activity> findAllByEmployeeId(Long employeeId);
 }
