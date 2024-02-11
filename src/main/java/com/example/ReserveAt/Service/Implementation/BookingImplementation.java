@@ -1,5 +1,6 @@
 package com.example.ReserveAt.Service.Implementation;
 
+import com.example.ReserveAt.Dto.BookingDTO;
 import com.example.ReserveAt.Model.Activity;
 import com.example.ReserveAt.Model.Booking;
 import com.example.ReserveAt.Model.Employee;
@@ -20,6 +21,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingImplementation implements BookingService {
@@ -85,5 +87,31 @@ public class BookingImplementation implements BookingService {
         } else {
             throw new UnavailableEmployeeException("Pracownik nie jest dostępny w wybranym terminie.");
         }
+    }
+
+    @Override
+    public List<BookingDTO> getBookingsForEmployee(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + employeeId));
+
+        return convertToDTOList(bookingRepository.findAllByEmployeeEmployeeId(employeeId));
+    }
+
+    private List<BookingDTO> convertToDTOList(List<Booking> bookings) {
+        return bookings.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private BookingDTO convertToDTO(Booking booking) {
+        return new BookingDTO(
+                booking.getUser().getUserId(),
+                booking.getEmployee().getEmployeeId(),
+                booking.getActivity().getId(),
+                booking.getActivity().getActivityName(),
+                booking.getBookingDate(),
+                booking.getStartTime(),
+                booking.getActivity().getDurationOfTreatment()
+        );
     }
 }

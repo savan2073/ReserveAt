@@ -1,16 +1,14 @@
 package com.example.ReserveAt.Controller;
 
-import com.example.ReserveAt.Dto.BookingDto;
+import com.example.ReserveAt.Dto.BookingDTO;
 import com.example.ReserveAt.Model.Booking;
 import com.example.ReserveAt.Model.User;
 import com.example.ReserveAt.Repository.UserRepository;
 import com.example.ReserveAt.Response.UnavailableEmployeeException;
 import com.example.ReserveAt.Service.BookingService;
-import com.example.ReserveAt.Service.Implementation.BookingImplementation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,7 +33,7 @@ public class BookingController {
     private UserRepository userRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<Booking> createBooking(@RequestBody BookingDto bookingDto, Principal principal) {
+    public ResponseEntity<Booking> createBooking(@RequestBody BookingDTO bookingDto, Principal principal) {
         logger.info("Received booking data: {}", bookingDto);
         try {
             String userEmail = principal.getName();
@@ -68,5 +67,11 @@ public class BookingController {
         body.put("message", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/{employeeId}")
+    public ResponseEntity<List<BookingDTO>> getBookingsForEmployee(@PathVariable Long employeeId) {
+        List<BookingDTO> bookings = bookingService.getBookingsForEmployee(employeeId);
+        return ResponseEntity.ok(bookings);
     }
 }

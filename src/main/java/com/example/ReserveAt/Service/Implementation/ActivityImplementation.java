@@ -4,6 +4,7 @@ import com.example.ReserveAt.Dto.ActivityDTO;
 import com.example.ReserveAt.Model.Activity;
 import com.example.ReserveAt.Model.Employee;
 import com.example.ReserveAt.Repository.ActivityRepository;
+import com.example.ReserveAt.Repository.BookingRepository;
 import com.example.ReserveAt.Repository.EmployeeRepository;
 import com.example.ReserveAt.Service.ActivityService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +19,8 @@ public class ActivityImplementation implements ActivityService {
     private ActivityRepository activityRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private BookingRepository bookingRepository;
 
     public Activity addActivity(ActivityDTO activityDTO, Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
@@ -59,6 +62,10 @@ public class ActivityImplementation implements ActivityService {
     @Override
     public void delete(Long id) {
         Activity activity = findById(id);
+
+        //usuwamy wszystkie rezerwacje powiązane z tą aktywnością
+        bookingRepository.deleteAllByActivityId(id);
+
         activityRepository.delete(activity);
     }
 
