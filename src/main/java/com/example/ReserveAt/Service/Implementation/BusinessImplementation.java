@@ -172,6 +172,11 @@ public class BusinessImplementation implements BusinessService {
     private BusinessDTO convertToBusinessDTO(Business business) {
         int reviewCount = reviewRepository.countByBusinessBusinessId(business.getBusinessId());
 
+        double rating = reviewRepository.findByBusinessBusinessId(business.getBusinessId())
+                .stream()
+                .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
         // Konwersja pracowników
         List<EmployeeDTO> employeeDTOs = business.getEmployees().stream().map(employee -> {
             // Tworzenie listy ActivityDTO z listy Activity
@@ -210,7 +215,7 @@ public class BusinessImplementation implements BusinessService {
                 business.getBusinessName(),
                 business.getCity(),
                 business.getAddress(),
-                business.getRating(),
+                rating,
                 business.getDescription(),
                 employeeDTOs,
                 business.getBusinessType(),

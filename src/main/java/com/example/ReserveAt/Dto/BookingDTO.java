@@ -11,16 +11,23 @@ public class BookingDTO {
     private String activityName;
     private LocalDate bookingDate;
     private LocalTime startTime;
+    private LocalTime endTime;
     private Duration duration;
+    private Long businessId;
+    private String businessName;
 
-    public BookingDTO(Long userId, Long employeeId, Long activityId, String activityName, LocalDate bookingDate, LocalTime startTime, Duration duration) {
+
+    public BookingDTO(Long userId, Long employeeId, Long activityId, String activityName, LocalDate bookingDate, LocalTime startTime, LocalTime endTime, Duration duration, Long businessId, String businessName) {
         this.userId = userId;
         this.employeeId = employeeId;
         this.activityId = activityId;
         this.activityName = activityName;
         this.bookingDate = bookingDate;
         this.startTime = startTime;
+        this.endTime = endTime;
         this.duration = duration;
+        this.businessId = businessId;
+        this.businessName = businessName;
     }
 
     public BookingDTO() {
@@ -74,11 +81,35 @@ public class BookingDTO {
         this.startTime = startTime;
     }
 
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
     public Duration getDuration() {
         return duration;
     }
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public Long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 }

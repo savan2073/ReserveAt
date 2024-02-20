@@ -1,10 +1,12 @@
 package com.example.ReserveAt.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,16 +19,19 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reviewId")
     private Long reviewId;
-    @Column(name = "userID")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    @JsonIgnore
+    private User user;
     @Column(name = "rating")
     private double rating;
-    @Column(name = "contentOfReview")
+    @Column(name = "contentOfReview", nullable = false, length = 500)
     private String content;
     @Column(name = "reviewDate")
-    private Date reviewDate;
+    private LocalDate reviewDate;
     @ManyToOne
     @JoinColumn(name = "businessId")
+    @JsonIgnore
     private Business business;
 
     public void setRating(double rating) {

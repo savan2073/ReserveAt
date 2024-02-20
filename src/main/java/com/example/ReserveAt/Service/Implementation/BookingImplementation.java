@@ -97,6 +97,13 @@ public class BookingImplementation implements BookingService {
         return convertToDTOList(bookingRepository.findAllByEmployeeEmployeeId(employeeId));
     }
 
+    @Override
+    public List<BookingDTO> getBookingsForUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+        return convertToDTOList(bookingRepository.findAllByUserUserId(userId));
+    }
+
     private List<BookingDTO> convertToDTOList(List<Booking> bookings) {
         return bookings.stream()
                 .map(this::convertToDTO)
@@ -111,7 +118,10 @@ public class BookingImplementation implements BookingService {
                 booking.getActivity().getActivityName(),
                 booking.getBookingDate(),
                 booking.getStartTime(),
-                booking.getActivity().getDurationOfTreatment()
+                booking.getEndTime(),
+                booking.getActivity().getDurationOfTreatment(),
+                booking.getBusiness().getBusinessId(),
+                booking.getBusiness().getBusinessName()
         );
     }
 }

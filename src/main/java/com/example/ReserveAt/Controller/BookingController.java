@@ -74,4 +74,10 @@ public class BookingController {
         List<BookingDTO> bookings = bookingService.getBookingsForEmployee(employeeId);
         return ResponseEntity.ok(bookings);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<BookingDTO>> getBookingsForUser(@PathVariable Long userId) {
+        List<BookingDTO> bookings = bookingService.getBookingsForUser(userId);
+        return ResponseEntity.ok(bookings);
+    }
 }

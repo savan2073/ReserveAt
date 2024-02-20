@@ -17,4 +17,6 @@ public interface BookingService {
     Booking createBooking(Long userId, Long employeeId, Long activityId, LocalDate bookingDate, LocalTime startTime, Duration duration);
 
     List<BookingDTO> getBookingsForEmployee(Long employeeId);
+
+    List<BookingDTO> getBookingsForUser(Long userId);
 }
