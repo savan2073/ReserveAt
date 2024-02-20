@@ -8,13 +8,17 @@ public class ReviewDTO {
     private Double rating;
     private String content;
     private LocalDate reviewDate;
+    private String firstName;
+    private String lastName;
 
-    public ReviewDTO(Long userId, Long businessId, Double rating, String content, LocalDate reviewDate) {
+    public ReviewDTO(Long userId, Long businessId, Double rating, String content, LocalDate reviewDate, String firstName, String lastName) {
         this.userId = userId;
         this.businessId = businessId;
         this.rating = rating;
         this.content = content;
         this.reviewDate = reviewDate;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public ReviewDTO() {
@@ -58,5 +62,21 @@ public class ReviewDTO {
 
     public void setReviewDate(LocalDate reviewDate) {
         this.reviewDate = reviewDate;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
