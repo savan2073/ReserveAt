@@ -1,9 +1,6 @@
 package com.example.ReserveAt.Controller;
 
-import com.example.ReserveAt.Dto.BusinessDTO;
-import com.example.ReserveAt.Dto.EmployeeDTO;
-import com.example.ReserveAt.Dto.LoginDTO;
-import com.example.ReserveAt.Dto.WorkingHoursDTO;
+import com.example.ReserveAt.Dto.*;
 import com.example.ReserveAt.Model.Business;
 import com.example.ReserveAt.Model.BusinessType;
 import com.example.ReserveAt.Model.City;
@@ -53,7 +50,7 @@ public class BusinessController {
 
         logger.info("Business register called");
         String photoPath = saveFileOnServer(photo);
-        BusinessDTO businessDTO = new BusinessDTO(null, companyName, city, address, 0.0, description, null, businessType, email, password, null, photoPath, 0, null);
+        BusinessDTO businessDTO = new BusinessDTO(null, companyName, city, address, 0.0, description, null, businessType, email, password, null, photoPath, 0, null, null, null);
 
         String id = businessService.addBiz(businessDTO);
         logger.info("Business registered successfully" + businessDTO);
@@ -168,5 +165,9 @@ public class BusinessController {
         return ResponseEntity.ok().build();
     }
 
-
+    @PutMapping("/{businessId}/location")
+    public ResponseEntity<Void> updateLocation(@PathVariable Long businessId, @RequestBody LocationDTO locationDTO) {
+        businessService.updateLocation(businessId, locationDTO.getLatitude(), locationDTO.getLongitude());
+        return ResponseEntity.ok().build();
+    }
 }

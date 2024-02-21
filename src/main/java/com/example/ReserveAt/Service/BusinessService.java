@@ -35,4 +35,6 @@ public interface BusinessService {
     void deleteWorkingHours(Long workingHoursId);
 
     void updateBusiness(Long businessId, BusinessDTO businessDTO);
+
+    void updateLocation(Long businessId, Double latitude, Double longitude);
 }

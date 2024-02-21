@@ -19,8 +19,11 @@ public class BusinessDTO {
     private String photoPath;
     private int reviewCount;
     private List<WorkingHoursDTO> workingHours;
+    private Double latitude;
+    private Double longitude;
 
-    public BusinessDTO(Long businessId, String businessName, City city, String address, double rating, String description, List<EmployeeDTO> employees, BusinessType businessType, String email, String password, List<Review> reviews, String photoPath, int reviewCount, List<WorkingHoursDTO> workingHours) {
+
+    public BusinessDTO(Long businessId, String businessName, City city, String address, double rating, String description, List<EmployeeDTO> employees, BusinessType businessType, String email, String password, List<Review> reviews, String photoPath, int reviewCount, List<WorkingHoursDTO> workingHours, Double latitude, Double longitude) {
         this.businessId = businessId;
         this.businessName = businessName;
         this.city = city;
@@ -35,6 +38,8 @@ public class BusinessDTO {
         this.photoPath = photoPath;
         this.reviewCount = reviewCount;
         this.workingHours = workingHours;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Long getBusinessId() {
@@ -147,6 +152,22 @@ public class BusinessDTO {
 
     public void setWorkingHours(List<WorkingHoursDTO> workingHours) {
         this.workingHours = workingHours;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }
 

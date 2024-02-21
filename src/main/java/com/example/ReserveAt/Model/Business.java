@@ -45,5 +45,9 @@ public class Business {
     private String photoPath;
     @OneToMany(mappedBy = "business")
     private List<WorkingHours> workingHours;
+    @Column(name = "latitude")
+    private Double latitude;
+    @Column(name = "longitude")
+    private Double longitude;
 
 }

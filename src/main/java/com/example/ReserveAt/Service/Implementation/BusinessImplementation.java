@@ -61,6 +61,8 @@ public class BusinessImplementation implements BusinessService {
                 this.passwordEncoder.encode(businessDTO.getPassword()),
                 businessDTO.getReviews(),
                 businessDTO.getPhotoPath(),
+                null,
+                null,
                 null
         );
         businessRepository.save(business);
@@ -139,6 +141,8 @@ public class BusinessImplementation implements BusinessService {
                 null,
                 business.getPhotoPath(),
                 reviewCount,
+                null,
+                null,
                 null
         );
     }
@@ -210,6 +214,7 @@ public class BusinessImplementation implements BusinessService {
                 .collect(Collectors.toList());
 
 
+
         return new BusinessDTO(
                 business.getBusinessId(),
                 business.getBusinessName(),
@@ -224,7 +229,9 @@ public class BusinessImplementation implements BusinessService {
                 business.getReviews(),
                 business.getPhotoPath(),
                 reviewCount,
-                workingHoursDTOs
+                workingHoursDTOs,
+                business.getLatitude(),
+                business.getLongitude()
         );
     }
 
@@ -313,6 +320,15 @@ public class BusinessImplementation implements BusinessService {
         //hasło i rating bez zmian
         //TODO:: osobna zmiana zdjęcia biznesu
 
+        businessRepository.save(business);
+    }
+
+    @Override
+    public void updateLocation(Long businessId, Double latitude, Double longitude) {
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(() -> new EntityNotFoundException("Business not found with id: " + businessId));
+        business.setLatitude(latitude);
+        business.setLongitude(longitude);
         businessRepository.save(business);
     }
 }
