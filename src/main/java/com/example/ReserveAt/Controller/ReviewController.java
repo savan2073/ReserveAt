@@ -43,4 +43,10 @@ public class ReviewController {
         List<ReviewDTO> friendsReviews = reviewService.findFriendsReviews(user.getUserId());
         return ResponseEntity.ok(friendsReviews);
     }
+
+    @GetMapping("/business/{businessId}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByBusinessId(@PathVariable Long businessId) {
+        List<ReviewDTO> reviewDTOs = reviewService.findByBusinessId(businessId);
+        return ResponseEntity.ok(reviewDTOs);
+    }
 }

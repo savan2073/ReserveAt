@@ -21,10 +21,8 @@ import java.util.stream.Collectors;
 public class ReviewImplementation implements ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private BusinessRepository businessRepository;
     @Autowired
@@ -70,5 +68,13 @@ public class ReviewImplementation implements ReviewService {
                 review.getUser().getFirstName(),
                 review.getUser().getLastName()
         );
+    }
+
+    @Override
+    public List<ReviewDTO> findByBusinessId(Long businessId) {
+        List<Review> reviews =  reviewRepository.findByBusinessBusinessId(businessId);
+        return reviews.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -12,4 +12,7 @@ public interface ReviewService {
     List<ReviewDTO> findFriendsReviews(Long userId);
 
     ReviewDTO convertToDTO(Review review);
+
+    List<ReviewDTO> findByBusinessId(Long businessId);
+
 }
